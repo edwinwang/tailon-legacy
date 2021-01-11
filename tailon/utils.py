@@ -1,5 +1,6 @@
 # -*- coding: utf-8; -*-
 
+import sys
 import os
 import re
 import logging
@@ -98,6 +99,9 @@ class FileLister:
                     files.append(path)
 
             self.files[group] = list(self.lister.statfiles(files, self.include_missing))
+            path_list = set([os.path.dirname(obj[0]) for obj in self.files[group]])
+            for path in path_list:
+                self.files['__ungrouped__'].insert(0, (os.path.join(path, "*"), 1, sys.maxint))
 
         afn = (i[0] for values in self.files.values() for i in values)
         afn = {os.path.abspath(i) for i in afn}
